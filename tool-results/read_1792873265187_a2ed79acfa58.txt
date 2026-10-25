@@ -1,0 +1,610 @@
+     1→     1→"use client";
+     2→     2→
+     3→     3→import { useEffect, useState } from "react";
+     4→     4→import {
+     5→     5→  LayoutDashboard,
+     6→     6→  Scissors,
+     7→     7→  GraduationCap,
+     8→     8→  Images,
+     9→     9→  CalendarCheck,
+    10→    10→  Clock,
+    11→    11→  Ban,
+    12→    12→  Pencil,
+    13→    13→  Plus,
+    14→    14→  Trash2,
+    15→    15→  ArrowLeft,
+    16→    16→  Upload,
+    17→    17→  CheckCircle2,
+    18→    18→  XCircle,
+    19→    19→  CheckCheck,
+    20→    20→  CalendarX,
+    21→    21→  CalendarDays,
+    22→    22→} from "lucide-react";
+    23→    23→import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+    24→    24→import { Button } from "@/components/ui/button";
+    25→    25→import { Input } from "@/components/ui/input";
+    26→    26→import { Label } from "@/components/ui/label";
+    27→    27→import { Badge } from "@/components/ui/badge";
+    28→    28→import { Switch } from "@/components/ui/switch";
+    29→    29→import {
+    30→    30→  Dialog,
+    31→    31→  DialogContent,
+    32→    32→  DialogHeader,
+    33→    33→  DialogTitle,
+    34→    34→  DialogFooter,
+    35→    35→} from "@/components/ui/dialog";
+    36→    36→import {
+    37→    37→  Select,
+    38→    38→  SelectContent,
+    39→    39→  SelectItem,
+    40→    40→  SelectTrigger,
+    41→    41→  SelectValue,
+    42→    42→} from "@/components/ui/select";
+    43→    43→import { useStudioStore } from "@/lib/studio-store";
+    44→    44→import {
+    45→    45→  WEEKDAY_LABELS,
+    46→    46→  TIME_SLOTS,
+    47→    47→  formatBRL,
+    48→    48→  type Service,
+    49→    49→  type Course,
+    50→    50→  type Booking,
+    51→    51→  type BookingStatus,
+    52→    52→} from "@/lib/studio-data";
+    53→    53→import { toast } from "@/hooks/use-toast";
+    54→    54→import { cn } from "@/lib/utils";
+    55→    55→
+    56→    56→const STATUS_STYLE: Record<BookingStatus, string> = {
+    57→    57→  CONFIRMADO: "bg-emerald-100 text-emerald-800 border-emerald-300",
+    58→    58→  PENDENTE: "bg-amber-100 text-amber-800 border-amber-300",
+    59→    59→  CONCLUIDO: "bg-rose-100 text-rose-800 border-rose-300",
+    60→    60→  CANCELADO: "bg-neutral-200 text-neutral-600 border-neutral-300",
+    61→    61→};
+    62→    62→
+    63→    63→const STATUS_LABEL: Record<BookingStatus, string> = {
+    64→    64→  CONFIRMADO: "Confirmado",
+    65→    65→  PENDENTE: "Pendente",
+    66→    66→  CONCLUIDO: "Concluído",
+    67→    67→  CANCELADO: "Cancelado",
+    68→    68→};
+    69→    69→
+    70→    70→function ServiceFormDialog({
+    71→    71→  open,
+    72→    72→  onOpenChange,
+    73→    73→  editing,
+    74→    74→}: {
+    75→    75→  open: boolean;
+    76→    76→  onOpenChange: (v: boolean) => void;
+    77→    77→  editing: Service | null;
+    78→    78→}) {
+    79→    79→  const { addService, updateService } = useStudioStore();
+    80→    80→  const [name, setName] = useState(editing?.name ?? "");
+    81→    81→  const [description, setDescription] = useState(editing?.description ?? "");
+    82→    82→  const [duration, setDuration] = useState(String(editing?.durationMin ?? 60));
+    83→    83→  const [price, setPrice] = useState(String(editing?.price ?? ""));
+    84→    84→  const [saving, setSaving] = useState(false);
+    85→    85→  const [key, setKey] = useState(0);
+    86→    86→
+    87→    87→  // reset on open change
+    88→    88→  if (open && key !== 1) {
+    89→    89→    setName(editing?.name ?? "");
+    90→    90→    setDescription(editing?.description ?? "");
+    91→    91→    setDuration(String(editing?.durationMin ?? 60));
+    92→    92→    setPrice(String(editing?.price ?? ""));
+    93→    93→    setKey(1);
+    94→    94→  }
+    95→    95→  if (!open && key !== 0) setKey(0);
+    96→    96→
+    97→    97→  const save = async () => {
+    98→    98→    if (!name.trim() || !price) {
+    99→    99→      toast({ title: "Preencha nome e preço.", variant: "destructive" });
+   100→   100→      return;
+   101→   101→    }
+   102→   102→    const data = {
+   103→   103→      name: name.trim(),
+   104→   104→      description: description.trim(),
+   105→   105→      durationMin: Number(duration),
+   106→   106→      price: Number(price),
+   107→   107→      image: editing?.image ?? "/images/gallery1.png",
+   108→   108→      active: editing?.active ?? true,
+   109→   109→    };
+   110→   110→    setSaving(true);
+   111→   111→    try {
+   112→   112→      if (editing) {
+   113→   113→        await updateService(editing.id, data);
+   114→   114→        toast({ title: "Serviço atualizado!" });
+   115→   115→      } else {
+   116→   116→        await addService(data);
+   117→   117→        toast({ title: "Serviço criado!" });
+   118→   118→      }
+   119→   119→      onOpenChange(false);
+   120→   120→    } catch (e) {
+   121→   121→      toast({ title: "Erro ao salvar", description: e instanceof Error ? e.message : "Tente novamente.", variant: "destructive" });
+   122→   122→    } finally {
+   123→   123→      setSaving(false);
+   124→   124→    }
+   125→   125→  };
+   126→   126→
+   127→   127→  return (
+   128→   128→    <Dialog open={open} onOpenChange={onOpenChange}>
+   129→   129→      <DialogContent className="max-w-md">
+   130→   130→        <DialogHeader>
+   131→   131→          <DialogTitle className="font-display">{editing ? "Editar serviço" : "Novo serviço"}</DialogTitle>
+   132→   132→        </DialogHeader>
+   133→   133→        <div className="space-y-3">
+   134→   134→          <div className="space-y-1.5">
+   135→   135→            <Label>Nome</Label>
+   136→   136→            <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Ex: Manicure Clássica" />
+   137→   137→          </div>
+   138→   138→          <div className="space-y-1.5">
+   139→   139→            <Label>Descrição</Label>
+   140→   140→            <Input value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Descrição curta" />
+   141→   141→          </div>
+   142→   142→          <div className="grid grid-cols-2 gap-3">
+   143→   143→            <div className="space-y-1.5">
+   144→   144→              <Label>Duração (min)</Label>
+   145→   145→              <Select value={duration} onValueChange={setDuration}>
+   146→   146→                <SelectTrigger><SelectValue /></SelectTrigger>
+   147→   147→                <SelectContent className="max-h-60 overflow-y-auto custom-scrollbar">
+   148→   148→                  {[30, 45, 60, 75, 90, 120, 150, 180].map((m) => (
+   149→   149→                    <SelectItem key={m} value={String(m)}>{m} min</SelectItem>
+   150→   150→                  ))}
+   151→   151→                </SelectContent>
+   152→   152→              </Select>
+   153→   153→            </div>
+   154→   154→            <div className="space-y-1.5">
+   155→   155→              <Label>Preço (R$)</Label>
+   156→   156→              <Input type="number" min={0} value={price} onChange={(e) => setPrice(e.target.value)} placeholder="45" />
+   157→   157→            </div>
+   158→   158→          </div>
+   159→   159→        </div>
+   160→   160→        <DialogFooter>
+   161→   161→          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+   162→   162→          <Button onClick={save} disabled={saving} className="btn-gold-shimmer text-white font-semibold">{saving ? "Salvando…" : "Salvar"}</Button>
+   163→   163→        </DialogFooter>
+   164→   164→      </DialogContent>
+   165→   165→    </Dialog>
+   166→   166→  );
+   167→   167→}
+   168→   168→
+   169→   169→function CourseFormDialog({
+   170→   170→  open,
+   171→   171→  onOpenChange,
+   172→   172→  editing,
+   173→   173→}: {
+   174→   174→  open: boolean;
+   175→   175→  onOpenChange: (v: boolean) => void;
+   176→   176→  editing: Course | null;
+   177→   177→}) {
+   178→   178→  const { addCourse, updateCourse } = useStudioStore();
+   179→   179→  const [name, setName] = useState(editing?.name ?? "");
+   180→   180→  const [description, setDescription] = useState(editing?.description ?? "");
+   181→   181→  const [duration, setDuration] = useState(editing?.duration ?? "");
+   182→   182→  const [priceLabel, setPriceLabel] = useState(editing?.priceLabel ?? "Preço em breve");
+   183→   183→  const [saving, setSaving] = useState(false);
+   184→   184→  const [key, setKey] = useState(0);
+   185→   185→
+   186→   186→  if (open && key !== 1) {
+   187→   187→    setName(editing?.name ?? "");
+   188→   188→    setDescription(editing?.description ?? "");
+   189→   189→    setDuration(editing?.duration ?? "");
+   190→   190→    setPriceLabel(editing?.priceLabel ?? "Preço em breve");
+   191→   191→    setKey(1);
+   192→   192→  }
+   193→   193→  if (!open && key !== 0) setKey(0);
+   194→   194→
+   195→   195→  const save = async () => {
+   196→   196→    if (!name.trim()) {
+   197→   197→      toast({ title: "Informe o nome do curso.", variant: "destructive" });
+   198→   198→      return;
+   199→   199→    }
+   200→   200→    const data = {
+   201→   201→      name: name.trim(),
+   202→   202→      description: description.trim(),
+   203→   203→      duration: duration.trim() || "Presencial",
+   204→   204→      benefits: editing?.benefits ?? ["Certificado de conclusão", "Material incluso"],
+   205→   205→      priceLabel,
+   206→   206→      image: editing?.image ?? "/images/course.png",
+   207→   207→    };
+   208→   208→    setSaving(true);
+   209→   209→    try {
+   210→   210→      if (editing) {
+   211→   211→        await updateCourse(editing.id, data);
+   212→   212→        toast({ title: "Curso atualizado!" });
+   213→   213→      } else {
+   214→   214→        await addCourse(data);
+   215→   215→        toast({ title: "Curso criado!" });
+   216→   216→      }
+   217→   217→      onOpenChange(false);
+   218→   218→    } catch (e) {
+   219→   219→      toast({ title: "Erro ao salvar", description: e instanceof Error ? e.message : "Tente novamente.", variant: "destructive" });
+   220→   220→    } finally {
+   221→   221→      setSaving(false);
+   222→   222→    }
+   223→   223→  };
+   224→   224→
+   225→   225→  return (
+   226→   226→    <Dialog open={open} onOpenChange={onOpenChange}>
+   227→   227→      <DialogContent className="max-w-md">
+   228→   228→        <DialogHeader>
+   229→   229→          <DialogTitle className="font-display">{editing ? "Editar curso" : "Novo curso"}</DialogTitle>
+   230→   230→        </DialogHeader>
+   231→   231→        <div className="space-y-3">
+   232→   232→          <div className="space-y-1.5">
+   233→   233→            <Label>Nome</Label>
+   234→   234→            <Input value={name} onChange={(e) => setName(e.target.value)} />
+   235→   235→          </div>
+   236→   236→          <div className="space-y-1.5">
+   237→   237→            <Label>Descrição</Label>
+   238→   238→            <Input value={description} onChange={(e) => setDescription(e.target.value)} />
+   239→   239→          </div>
+   240→   240→          <div className="space-y-1.5">
+   241→   241→            <Label>Duração</Label>
+   242→   242→            <Input value={duration} onChange={(e) => setDuration(e.target.value)} placeholder="Ex: 2 semanas · presencial" />
+   243→   243→          </div>
+   244→   244→          <div className="space-y-1.5">
+   245→   245→            <Label>Preço</Label>
+   246→   246→            <Select value={priceLabel} onValueChange={setPriceLabel}>
+   247→   247→              <SelectTrigger><SelectValue /></SelectTrigger>
+   248→   248→              <SelectContent>
+   249→   249→                <SelectItem value="Preço em breve">Preço em breve</SelectItem>
+   250→   250→                <SelectItem value="Sob consulta">Sob consulta</SelectItem>
+   251→   251→              </SelectContent>
+   252→   252→            </Select>
+   253→   253→          </div>
+   254→   254→        </div>
+   255→   255→        <DialogFooter>
+   256→   256→          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+   257→   257→          <Button onClick={save} disabled={saving} className="btn-gold-shimmer text-white font-semibold">{saving ? "Salvando…" : "Salvar"}</Button>
+   258→   258→        </DialogFooter>
+   259→   259→      </DialogContent>
+   260→   260→    </Dialog>
+   261→   261→  );
+   262→   262→}
+   263→   263→
+   264→   264→export function AdminArea() {
+   265→   265→  const {
+   266→   266→    services, deleteService, updateService,
+   267→   267→    courses, deleteCourse,
+   268→   268→    bookings, loadBookings, updateBookingStatus, rescheduleBooking, deleteBooking,
+   269→   269→    workHours, loadWorkHours, setWorkHours,
+   270→   270→    blocks, loadBlocks, addBlock, removeBlock,
+   271→   271→    setAdminView,
+   272→   272→  } = useStudioStore();
+   273→   273→
+   274→   274→  const [svcDialog, setSvcDialog] = useState<{ open: boolean; editing: Service | null }>({ open: false, editing: null });
+   275→   275→  const [crsDialog, setCrsDialog] = useState<{ open: boolean; editing: Course | null }>({ open: false, editing: null });
+   276→   276→  const [blockDate, setBlockDate] = useState("");
+   277→   277→  const [blockReason, setBlockReason] = useState("");
+   278→   278→  const [reschedule, setReschedule] = useState<{ booking: Booking | null; date: string; time: string }>({ booking: null, date: "", time: "" });
+   279→   279→  const [busyAction, setBusyAction] = useState<string | null>(null);
+   280→   280→
+   281→   281→  useEffect(() => {
+   282→   282→    loadBookings().catch(() => toast({ title: "Erro ao carregar agendamentos", variant: "destructive" }));
+   283→   283→    loadWorkHours().catch(() => {});
+   284→   284→    loadBlocks().catch(() => {});
+   285→   285→  }, []);
+   286→   286→
+   287→   287→  const run = async (id: string, fn: () => Promise<void>, okMsg: string) => {
+   288→   288→    setBusyAction(id);
+   289→   289→    try {
+   290→   290→      await fn();
+   291→   291→      toast({ title: okMsg });
+   292→   292→    } catch (e) {
+   293→   293→      toast({ title: "Erro", description: e instanceof Error ? e.message : "Tente novamente.", variant: "destructive" });
+   294→   294→    } finally {
+   295→   295→      setBusyAction(null);
+   296→   296→    }
+   297→   297→  };
+   298→   298→
+   299→   299→  const sortedBookings = [...bookings].sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time));
+   300→   300→
+   301→   301→  return (
+   302→   302→    <div className="min-h-screen bg-gradient-to-br from-[var(--cream)] to-[var(--blush)]/60">
+   303→   303→      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+   304→   304→        {/* Header */}
+   305→   305→        <div className="flex items-center justify-between mb-8">
+   306→   306→          <div className="flex items-center gap-3">
+   307→   307→            <span className="h-11 w-11 rounded-xl bg-gradient-to-br from-[var(--rose-deep)] to-[var(--gold)] flex items-center justify-center text-white shadow-md">
+   308→   308→              <LayoutDashboard size={22} />
+   309→   309→            </span>
+   310→   310→            <div>
+   311→   311→              <h1 className="font-display text-2xl font-bold text-[var(--charcoal)]">Área Administrativa</h1>
+   312→   312→              <p className="text-sm text-muted-foreground">Gerencie o Studio Bella Unhas</p>
+   313→   313→            </div>
+   314→   314→          </div>
+   315→   315→          <Button variant="outline" onClick={() => setAdminView(false)} className="gap-1.5 border-[var(--gold)]/50 text-[var(--rose-deep)] hover:bg-white">
+   316→   316→            <ArrowLeft size={16} /> Ver site
+   317→   317→          </Button>
+   318→   318→        </div>
+   319→   319→
+   320→   320→        <Tabs defaultValue="agendamentos">
+   321→   321→          <TabsList className="flex flex-wrap h-auto gap-1 bg-white/80 border border-[var(--gold)]/20 p-1 mb-6">
+   322→   322→            {[
+   323→   323→              { v: "agendamentos", icon: CalendarCheck, label: "Agendamentos" },
+   324→   324→              { v: "servicos", icon: Scissors, label: "Serviços" },
+   325→   325→              { v: "cursos", icon: GraduationCap, label: "Cursos" },
+   326→   326→              { v: "galeria", icon: Images, label: "Galeria" },
+   327→   327→              { v: "horarios", icon: Clock, label: "Horários" },
+   328→   328→              { v: "bloqueios", icon: Ban, label: "Bloqueios" },
+   329→   329→            ].map(({ v, icon: Icon, label }) => (
+   330→   330→              <TabsTrigger key={v} value={v} className="gap-1.5 data-[state=active]:bg-[var(--blush)] data-[state=active]:text-[var(--rose-deep)] px-3 py-2">
+   331→   331→                <Icon size={15} /> <span className="hidden sm:inline">{label}</span>
+   332→   332→              </TabsTrigger>
+   333→   333→            ))}
+   334→   334→          </TabsList>
+   335→   335→
+   336→   336→          {/* ---- Agendamentos ---- */}
+   337→   337→          <TabsContent value="agendamentos">
+   338→   338→            <div className="rounded-2xl border border-[var(--gold)]/25 bg-white shadow-sm overflow-hidden">
+   339→   339→              <div className="max-h-[60vh] overflow-y-auto custom-scrollbar">
+   340→   340→                <table className="w-full text-sm">
+   341→   341→                  <thead className="sticky top-0 bg-[var(--blush)] text-[var(--charcoal)]">
+   342→   342→                    <tr>
+   343→   343→                      <th className="text-left font-semibold px-4 py-3">Cliente</th>
+   344→   344→                      <th className="text-left font-semibold px-4 py-3">Serviço</th>
+   345→   345→                      <th className="text-left font-semibold px-4 py-3">Data / Hora</th>
+   346→   346→                      <th className="text-left font-semibold px-4 py-3">Status</th>
+   347→   347→                      <th className="text-left font-semibold px-4 py-3">Ações</th>
+   348→   348→                    </tr>
+   349→   349→                  </thead>
+   350→   350→                  <tbody>
+   351→   351→                    {sortedBookings.map((b) => (
+   352→   352→                      <tr key={b.id} className="border-t border-[var(--gold)]/15 hover:bg-[var(--cream)]/60">
+   353→   353→                        <td className="px-4 py-3">
+   354→   354→                          <p className="font-medium text-[var(--charcoal)]">{b.clientName}</p>
+   355→   355→                          <p className="text-xs text-muted-foreground">{b.clientPhone}</p>
+   356→   356→                        </td>
+   357→   357→                        <td className="px-4 py-3">{b.serviceName}</td>
+   358→   358→                        <td className="px-4 py-3 whitespace-nowrap">
+   359→   359→                          {b.date.split("-").reverse().join("/")} · {b.time}
+   360→   360→                        </td>
+   361→   361→                        <td className="px-4 py-3">
+   362→   362→                          <Badge variant="outline" className={cn("border", STATUS_STYLE[b.status])}>
+   363→   363→                            {STATUS_LABEL[b.status]}
+   364→   364→                          </Badge>
+   365→   365→                        </td>
+   366→   366→                        <td className="px-4 py-3">
+   367→   367→                          <div className="flex gap-1.5 flex-wrap">
+   368→   368→                            {b.status === "PENDENTE" && (
+   369→   369→                              <Button size="sm" variant="outline" disabled={busyAction === b.id} className="h-8 gap-1 border-emerald-300 text-emerald-700 hover:bg-emerald-50" onClick={() => run(b.id, () => updateBookingStatus(b.id, "CONFIRMADO"), "Agendamento confirmado!")}>
+   370→   370→                                <CheckCircle2 size={14} /> Confirmar
+   371→   371→                              </Button>
+   372→   372→                            )}
+   373→   373→                            {b.status !== "CONCLUIDO" && b.status !== "CANCELADO" && (
+   374→   374→                              <>
+   375→   375→                                <Button size="sm" variant="outline" disabled={busyAction === b.id} className="h-8 gap-1 border-rose-200 text-rose-700 hover:bg-rose-50" onClick={() => run(b.id, () => updateBookingStatus(b.id, "CONCLUIDO"), "Agendamento concluído!")}>
+   376→   376→                                  <CheckCheck size={14} /> Concluir
+   377→   377→                                </Button>
+   378→   378→                                <Button size="sm" variant="outline" disabled={busyAction === b.id} className="h-8 gap-1 border-[var(--gold)]/60 text-[var(--rose-deep)] hover:bg-[var(--blush)]" onClick={() => setReschedule({ booking: b, date: b.date, time: b.time })}>
+   379→   379→                                  <CalendarDays size={14} /> Remarcar
+   380→   380→                                </Button>
+   381→   381→                                <Button size="sm" variant="outline" disabled={busyAction === b.id} className="h-8 gap-1 border-neutral-300 text-neutral-600 hover:bg-neutral-50" onClick={() => run(b.id, () => deleteBooking(b.id), "Agendamento cancelado.")}>
+   382→   382→                                  <XCircle size={14} /> Cancelar
+   383→   383→                                </Button>
+   384→   384→                              </>
+   385→   385→                            )}
+   386→   386→                          </div>
+   387→   387→                        </td>
+   388→   388→                      </tr>
+   389→   389→                    ))}
+   390→   390→                    {sortedBookings.length === 0 && (
+   391→   391→                      <tr><td colSpan={5} className="px-4 py-10 text-center text-muted-foreground">Nenhum agendamento ainda.</td></tr>
+   392→   392→                    )}
+   393→   393→                  </tbody>
+   394→   394→                </table>
+   395→   395→              </div>
+   396→   396→            </div>
+   397→   397→          </TabsContent>
+   398→   398→
+   399→   399→          {/* ---- Serviços ---- */}
+   400→   400→          <TabsContent value="servicos">
+   401→   401→            <div className="flex justify-end mb-4">
+   402→   402→              <Button onClick={() => setSvcDialog({ open: true, editing: null })} className="btn-gold-shimmer text-white gap-1.5">
+   403→   403→                <Plus size={16} /> Novo serviço
+   404→   404→              </Button>
+   405→   405→            </div>
+   406→   406→            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[60vh] overflow-y-auto custom-scrollbar p-1">
+   407→   407→              {services.map((s) => (
+   408→   408→                <div key={s.id} className="card-lift rounded-xl border border-[var(--gold)]/25 bg-white p-4">
+   409→   409→                  <div className="flex items-start justify-between gap-2">
+   410→   410→                    <div>
+   411→   411→                      <h3 className="font-semibold text-[var(--charcoal)]">{s.name}</h3>
+   412→   412→                      <p className="text-xs text-muted-foreground mt-0.5">{s.durationMin} min · {formatBRL(s.price)}</p>
+   413→   413→                    </div>
+   414→   414→                    <Switch checked={s.active} onCheckedChange={(v) => run(s.id, () => updateService(s.id, { active: v }), v ? "Serviço ativado" : "Serviço desativado")} aria-label={`Ativar ${s.name}`} />
+   415→   415→                  </div>
+   416→   416→                  <p className="text-sm text-muted-foreground mt-2 line-clamp-2">{s.description}</p>
+   417→   417→                  <div className="flex gap-2 mt-3">
+   418→   418→                    <Button size="sm" variant="outline" className="h-8 gap-1 flex-1" onClick={() => setSvcDialog({ open: true, editing: s })}>
+   419→   419→                      <Pencil size={13} /> Editar
+   420→   420→                    </Button>
+   421→   421→                    <Button size="sm" variant="outline" className="h-8 gap-1 text-destructive border-destructive/30 hover:bg-destructive/10" onClick={() => run(s.id, () => deleteService(s.id), "Serviço excluído")}>
+   422→   422→                      <Trash2 size={13} /> Excluir
+   423→   423→                    </Button>
+   424→   424→                  </div>
+   425→   425→                </div>
+   426→   426→              ))}
+   427→   427→            </div>
+   428→   428→          </TabsContent>
+   429→   429→
+   430→   430→          {/* ---- Cursos ---- */}
+   431→   431→          <TabsContent value="cursos">
+   432→   432→            <div className="flex justify-end mb-4">
+   433→   433→              <Button onClick={() => setCrsDialog({ open: true, editing: null })} className="btn-gold-shimmer text-white gap-1.5">
+   434→   434→                <Plus size={16} /> Novo curso
+   435→   435→              </Button>
+   436→   436→            </div>
+   437→   437→            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[60vh] overflow-y-auto custom-scrollbar p-1">
+   438→   438→              {courses.map((c) => (
+   439→   439→                <div key={c.id} className="card-lift rounded-xl border border-[var(--gold)]/25 bg-white p-4">
+   440→   440→                  <div className="flex items-start justify-between gap-2">
+   441→   441→                    <h3 className="font-semibold text-[var(--charcoal)]">{c.name}</h3>
+   442→   442→                    <Badge variant="outline" className="border-[var(--gold)]/60 text-[var(--rose-deep)] shrink-0">{c.priceLabel}</Badge>
+   443→   443→                  </div>
+   444→   444→                  <p className="text-xs text-muted-foreground mt-1">{c.duration}</p>
+   445→   445→                  <p className="text-sm text-muted-foreground mt-2 line-clamp-2">{c.description}</p>
+   446→   446→                  <div className="flex gap-2 mt-3">
+   447→   447→                    <Button size="sm" variant="outline" className="h-8 gap-1 flex-1" onClick={() => setCrsDialog({ open: true, editing: c })}>
+   448→   448→                      <Pencil size={13} /> Editar
+   449→   449→                    </Button>
+   450→   450→                    <Button size="sm" variant="outline" className="h-8 gap-1 text-destructive border-destructive/30 hover:bg-destructive/10" onClick={() => run(c.id, () => deleteCourse(c.id), "Curso excluído")}>
+   451→   451→                      <Trash2 size={13} /> Excluir
+   452→   452→                    </Button>
+   453→   453→                  </div>
+   454→   454→                </div>
+   455→   455→              ))}
+   456→   456→            </div>
+   457→   457→          </TabsContent>
+   458→   458→
+   459→   459→          {/* ---- Galeria ---- */}
+   460→   460→          <TabsContent value="galeria">
+   461→   461→            <div className="rounded-2xl border-2 border-dashed border-[var(--gold)]/50 bg-white/70 p-12 text-center">
+   462→   462→              <Upload size={40} className="mx-auto text-[var(--gold)] mb-4" />
+   463→   463→              <h3 className="font-display text-xl font-bold text-[var(--charcoal)]">Envie fotos dos trabalhos</h3>
+   464→   464→              <p className="text-sm text-muted-foreground mt-2 max-w-md mx-auto">
+   465→   465→                Upload de imagens será habilitado quando o backend estiver conectado. As fotos atuais são ilustrativas.
+   466→   466→              </p>
+   467→   467→              <Button className="mt-5 btn-gold-shimmer text-white gap-2" disabled>
+   468→   468→                <Upload size={16} /> Selecionar arquivos
+   469→   469→              </Button>
+   470→   470→            </div>
+   471→   471→          </TabsContent>
+   472→   472→
+   473→   473→          {/* ---- Horários ---- */}
+   474→   474→          <TabsContent value="horarios">
+   475→   475→            <div className="rounded-2xl border border-[var(--gold)]/25 bg-white p-5 shadow-sm space-y-4 max-h-[60vh] overflow-y-auto custom-scrollbar">
+   476→   476→              {WEEKDAY_LABELS.map((label, i) => {
+   477→   477→                const h = workHours[i];
+   478→   478→                return (
+   479→   479→                  <div key={label} className="flex flex-col sm:flex-row sm:items-center gap-3 py-2 border-b border-[var(--gold)]/10 last:border-0">
+   480→   480→                    <span className="font-medium text-[var(--charcoal)] w-24">{label}</span>
+   481→   481→                    <div className="flex items-center gap-2">
+   482→   482→                      <Switch
+   483→   483→                        checked={h?.open ?? false}
+   484→   484→                        onCheckedChange={(v) => run(`wh-${i}`, () => setWorkHours(i, { ...(h ?? { from: "09:00", to: "18:00" }), open: v }), v ? `${label} aberto` : `${label} fechado`)}
+   485→   485→                        aria-label={`Abrir ${label}`}
+   486→   486→                      />
+   487→   487→                      <span className="text-sm text-muted-foreground">{h?.open ? "Aberto" : "Fechado"}</span>
+   488→   488→                    </div>
+   489→   489→                    {h?.open && (
+   490→   490→                      <div className="flex items-center gap-2 sm:ml-auto">
+   491→   491→                        <Select value={h.from} onValueChange={(v) => run(`wh-${i}`, () => setWorkHours(i, { ...h, from: v }), "Horário atualizado")}>
+   492→   492→                          <SelectTrigger className="w-[100px] h-9"><SelectValue /></SelectTrigger>
+   493→   493→                          <SelectContent className="max-h-56 overflow-y-auto custom-scrollbar">
+   494→   494→                            {TIME_SLOTS.map((t) => <SelectItem key={t} value={t}>{t}</SelectItem>)}
+   495→   495→                          </SelectContent>
+   496→   496→                        </Select>
+   497→   497→                        <span className="text-muted-foreground">–</span>
+   498→   498→                        <Select value={h.to} onValueChange={(v) => run(`wh-${i}`, () => setWorkHours(i, { ...h, to: v }), "Horário atualizado")}>
+   499→   499→                          <SelectTrigger className="w-[100px] h-9"><SelectValue /></SelectTrigger>
+   500→   500→                          <SelectContent className="max-h-56 overflow-y-auto custom-scrollbar">
+   501→   501→                            {TIME_SLOTS.map((t) => <SelectItem key={t} value={t}>{t}</SelectItem>)}
+   502→   502→                          </SelectContent>
+   503→   503→                        </Select>
+   504→   504→                      </div>
+   505→   505→                    )}
+   506→   506→                  </div>
+   507→   507→                );
+   508→   508→              })}
+   509→   509→            </div>
+   510→   510→          </TabsContent>
+   511→   511→
+   512→   512→          {/* ---- Bloqueios ---- */}
+   513→   513→          <TabsContent value="bloqueios">
+   514→   514→            <div className="grid lg:grid-cols-2 gap-6">
+   515→   515→              <div className="rounded-2xl border border-[var(--gold)]/25 bg-white p-5 shadow-sm space-y-4">
+   516→   516→                <h3 className="font-display text-lg font-bold text-[var(--charcoal)]">Bloquear um dia inteiro</h3>
+   517→   517→                <div className="space-y-1.5">
+   518→   518→                  <Label htmlFor="block-date">Data</Label>
+   519→   519→                  <Input id="block-date" type="date" value={blockDate} onChange={(e) => setBlockDate(e.target.value)} />
+   520→   520→                </div>
+   521→   521→                <div className="space-y-1.5">
+   522→   522→                  <Label htmlFor="block-reason">Motivo (opcional)</Label>
+   523→   523→                  <Input id="block-reason" value={blockReason} onChange={(e) => setBlockReason(e.target.value)} placeholder="Ex: Férias, compromisso..." />
+   524→   524→                </div>
+   525→   525→                <Button
+   526→   526→                  className="btn-gold-shimmer text-white gap-1.5"
+   527→   527→                  onClick={() => {
+   528→   528→                    if (!blockDate) { toast({ title: "Selecione uma data.", variant: "destructive" }); return; }
+   529→   529→                    run("block", async () => {
+   530→   530→                      await addBlock({ date: blockDate, reason: blockReason.trim() || undefined });
+   531→   531→                      setBlockDate(""); setBlockReason("");
+   532→   532→                    }, `Dia ${blockDate.split("-").reverse().join("/")} bloqueado!`);
+   533→   533→                  }}
+   534→   534→                >
+   535→   535→                  <CalendarX size={16} /> Bloquear dia
+   536→   536→                </Button>
+   537→   537→              </div>
+   538→   538→
+   539→   539→              <div className="rounded-2xl border border-[var(--gold)]/25 bg-white p-5 shadow-sm">
+   540→   540→                <h3 className="font-display text-lg font-bold text-[var(--charcoal)] mb-4">Dias bloqueados</h3>
+   541→   541→                <div className="space-y-2.5 max-h-60 overflow-y-auto custom-scrollbar">
+   542→   542→                  {blocks.map((b) => (
+   543→   543→                    <div key={b.id} className="flex items-center justify-between rounded-xl border border-destructive/25 bg-destructive/5 px-4 py-3">
+   544→   544→                      <div>
+   545→   545→                        <p className="font-medium text-[var(--charcoal)]">{b.date.split("-").reverse().join("/")}</p>
+   546→   546→                        {b.reason && <p className="text-xs text-muted-foreground">{b.reason}</p>}
+   547→   547→                      </div>
+   548→   548→                      <Button size="sm" variant="ghost" className="text-destructive hover:bg-destructive/10 gap-1" onClick={() => run(b.id, () => removeBlock(b.id), "Bloqueio removido")}>
+   549→   549→                        <Trash2 size={14} /> Remover
+   550→   550→                      </Button>
+   551→   551→                    </div>
+   552→   552→                  ))}
+   553→   553→                  {blocks.length === 0 && <p className="text-sm text-muted-foreground py-6 text-center">Nenhum dia bloqueado.</p>}
+   554→   554→                </div>
+   555→   555→              </div>
+   556→   556→            </div>
+   557→   557→          </TabsContent>
+   558→   558→        </Tabs>
+   559→   559→      </div>
+   560→   560→
+   561→   561→      <ServiceFormDialog open={svcDialog.open} editing={svcDialog.editing} onOpenChange={(v) => setSvcDialog({ open: v, editing: null })} />
+   562→   562→      <CourseFormDialog open={crsDialog.open} editing={crsDialog.editing} onOpenChange={(v) => setCrsDialog({ open: v, editing: null })} />
+   563→   563→
+   564→   564→      {/* Reschedule dialog */}
+   565→   565→      <Dialog open={!!reschedule.booking} onOpenChange={(v) => !v && setReschedule({ booking: null, date: "", time: "" })}>
+   566→   566→        <DialogContent className="max-w-sm">
+   567→   567→          <DialogHeader>
+   568→   568→            <DialogTitle className="font-display">Remarcar agendamento</DialogTitle>
+   569→   569→          </DialogHeader>
+   570→   570→          {reschedule.booking && (
+   571→   571→            <div className="space-y-3">
+   572→   572→              <p className="text-sm text-muted-foreground">
+   573→   573→                {reschedule.booking.clientName} · {reschedule.booking.serviceName}
+   574→   574→              </p>
+   575→   575→              <div className="space-y-1.5">
+   576→   576→                <Label htmlFor="rs-date">Nova data</Label>
+   577→   577→                <Input id="rs-date" type="date" value={reschedule.date} onChange={(e) => setReschedule((r) => ({ ...r, date: e.target.value, time: "" }))} />
+   578→   578→              </div>
+   579→   579→              <div className="space-y-1.5">
+   580→   580→                <Label>Nova hora</Label>
+   581→   581→                <Select value={reschedule.time} onValueChange={(v) => setReschedule((r) => ({ ...r, time: v }))}>
+   582→   582→                  <SelectTrigger><SelectValue placeholder="Selecione" /></SelectTrigger>
+   583→   583→                  <SelectContent className="max-h-60 overflow-y-auto custom-scrollbar">
+   584→   584→                    {TIME_SLOTS.map((t) => <SelectItem key={t} value={t}>{t}</SelectItem>)}
+   585→   585→                  </SelectContent>
+   586→   586→                </Select>
+   587→   587→              </div>
+   588→   588→            </div>
+   589→   589→          )}
+   590→   590→          <DialogFooter>
+   591→   591→            <Button variant="outline" onClick={() => setReschedule({ booking: null, date: "", time: "" })}>Cancelar</Button>
+   592→   592→            <Button
+   593→   593→              disabled={!reschedule.date || !reschedule.time}
+   594→   594→              className="btn-gold-shimmer text-white font-semibold"
+   595→   595→              onClick={async () => {
+   596→   596→                const { booking, date, time } = reschedule;
+   597→   597→                if (!booking) return;
+   598→   598→                await run(booking.id, () => rescheduleBooking(booking.id, date, time), "Agendamento remarcado!");
+   599→   599→                setReschedule({ booking: null, date: "", time: "" });
+   600→   600→              }}
+   601→   601→            >
+   602→   602→              Remarcar
+   603→   603→            </Button>
+   604→   604→          </DialogFooter>
+   605→   605→        </DialogContent>
+   606→   606→      </Dialog>
+   607→   607→    </div>
+   608→   608→  );
+   609→   609→}
+   610→   610→

@@ -1,0 +1,97 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         String   @default("CLIENT") // ADMIN | CLIENT
+  bookings     Booking[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Service {
+  id          String    @id @default(cuid())
+  name        String
+  description String
+  durationMin Int
+  price       Float?
+  image       String    @default("/images/gallery1.png")
+  imagePosition String  @default("center")
+  active      Boolean   @default(true)
+  bookings    Booking[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Course {
+  id           String   @id @default(cuid())
+  name         String
+  description  String
+  duration     String
+  level        String   @default("Iniciante")
+  benefits     String   @default("[]") // JSON-encoded string[]
+  learnTheory  String   @default("[]") // JSON-encoded string[]
+  learnPractice String  @default("[]") // JSON-encoded string[]
+  included     String   @default("[]") // JSON-encoded string[]
+  note         String   @default("")
+  priceLabel   String   @default("Preço em breve")
+  priceFull        String @default("")
+  priceInstallments String @default("")
+  paymentNote      String @default("")
+  forWho           String @default("[]") // JSON-encoded string[]
+  image        String   @default("/images/course.png")
+  imagePosition String  @default("center")
+  active       Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Booking {
+  id          String   @id @default(cuid())
+  serviceId   String
+  service     Service  @relation(fields: [serviceId], references: [id])
+  date        String // yyyy-MM-dd
+  time        String // HH:mm
+  clientName  String
+  clientPhone String
+  userId      String?
+  user        User?    @relation(fields: [userId], references: [id])
+  status      String   @default("PENDENTE") // PENDENTE | CONFIRMADO | CONCLUIDO | CANCELADO
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([date, time])
+}
+
+model WorkHours {
+  weekday Int     @id // 0=Sunday .. 6=Saturday
+  open    Boolean @default(true)
+  from    String  @default("09:00")
+  to      String  @default("18:00")
+}
+
+model GalleryImage {
+  id        String   @id @default(cuid())
+  url       String   @unique
+  caption   String?
+  imagePosition String @default("center")
+  order     Int      @default(0)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+model DayBlock {
+  id        String   @id @default(cuid())
+  date      String   @unique // yyyy-MM-dd
+  reason    String?
+  createdAt DateTime @default(now())
+}
