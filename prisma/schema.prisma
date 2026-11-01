@@ -95,3 +95,10 @@ model DayBlock {
   reason    String?
   createdAt DateTime @default(now())
 }
+
+model Upload {
+  id        String   @id @default(cuid())
+  mime      String
+  data      String // base64-encoded image bytes
+  createdAt DateTime @default(now())
+}
