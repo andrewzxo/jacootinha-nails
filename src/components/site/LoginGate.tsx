@@ -177,9 +177,6 @@ export function LoginGate() {
                 >
                   {busy ? "Entrando…" : "Entrar"}
                 </Button>
-                <p className="text-xs text-center text-muted-foreground">
-                  Administradora? Use <span className="font-medium text-[var(--rose-deep)]">admin@jacootinha.com</span>
-                </p>
               </div>
             </TabsContent>
 
