@@ -10,7 +10,7 @@ export function Hero({ onBook }: { onBook: () => void }) {
   return (
     <section className="relative min-h-[88vh] flex items-center overflow-hidden">
       <Image
-        src="/images/hero.png"
+        src="/images/hero.webp"
         alt="Jacootinha Nails — alongamentos sofisticados"
         fill
         className="object-cover"

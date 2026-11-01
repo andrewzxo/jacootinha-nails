@@ -84,7 +84,7 @@ export function LoginGate() {
       {/* Image side */}
       <div className="relative hidden lg:block lg:w-1/2 overflow-hidden">
         <Image
-          src="/images/hero.png"
+          src="/images/hero.webp"
           alt="Jacootinha Nails"
           fill
           className="object-cover"
@@ -102,7 +102,7 @@ export function LoginGate() {
           </p>
         </div>
         <Image
-          src="/images/logo.png"
+          src="/images/logo.webp"
           alt="Jacootinha Nails"
           width={56}
           height={56}
@@ -114,7 +114,7 @@ export function LoginGate() {
       <div className="flex-1 flex items-center justify-center p-6 sm:p-12">
         <div className="w-full max-w-md">
           <div className="flex items-center justify-center gap-3 mb-8">
-            <Image src="/images/logo.png" alt="Jacootinha Nails" width={48} height={48} className="rounded-full shadow" />
+            <Image src="/images/logo.webp" alt="Jacootinha Nails" width={48} height={48} className="rounded-full shadow" />
             <div className="text-left">
               <p className="font-script text-3xl text-[var(--rose-deep)] leading-none">Bem-vinda ao</p>
               <h1 className="font-display text-2xl font-bold text-[var(--charcoal)]">Jacootinha Nails</h1>

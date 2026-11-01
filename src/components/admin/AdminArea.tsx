@@ -190,7 +190,7 @@ function ServiceFormDialog({
   const [description, setDescription] = useState(editing?.description ?? "");
   const [duration, setDuration] = useState(String(editing?.durationMin ?? 60));
   const [price, setPrice] = useState(String(editing?.price ?? ""));
-  const [image, setImage] = useState(editing?.image ?? "/images/gallery1.png");
+  const [image, setImage] = useState(editing?.image ?? "/images/gallery1.webp");
   const [imagePosition, setImagePosition] = useState(editing?.imagePosition ?? "center");
   const [saving, setSaving] = useState(false);
   const [key, setKey] = useState(0);
@@ -201,7 +201,7 @@ function ServiceFormDialog({
     setDescription(editing?.description ?? "");
     setDuration(String(editing?.durationMin ?? 60));
     setPrice(String(editing?.price ?? ""));
-    setImage(editing?.image ?? "/images/gallery1.png");
+    setImage(editing?.image ?? "/images/gallery1.webp");
     setImagePosition(editing?.imagePosition ?? "center");
     setKey(1);
   }
@@ -303,7 +303,7 @@ function CourseFormDialog({
   const [priceInstallments, setPriceInstallments] = useState(editing?.priceInstallments ?? "");
   const [paymentNote, setPaymentNote] = useState(editing?.paymentNote ?? "");
   const [forWho, setForWho] = useState((editing?.forWho ?? []).join("\n"));
-  const [image, setImage] = useState(editing?.image ?? "/images/curso/capa.png");
+  const [image, setImage] = useState(editing?.image ?? "/images/curso/capa.webp");
   const [imagePosition, setImagePosition] = useState(editing?.imagePosition ?? "center");
   const [learnTheory, setLearnTheory] = useState((editing?.learnTheory ?? []).join("\n"));
   const [learnPractice, setLearnPractice] = useState((editing?.learnPractice ?? []).join("\n"));
@@ -322,7 +322,7 @@ function CourseFormDialog({
     setPriceInstallments(editing?.priceInstallments ?? "");
     setPaymentNote(editing?.paymentNote ?? "");
     setForWho((editing?.forWho ?? []).join("\n"));
-    setImage(editing?.image ?? "/images/curso/capa.png");
+    setImage(editing?.image ?? "/images/curso/capa.webp");
     setImagePosition(editing?.imagePosition ?? "center");
     setLearnTheory((editing?.learnTheory ?? []).join("\n"));
     setLearnPractice((editing?.learnPractice ?? []).join("\n"));

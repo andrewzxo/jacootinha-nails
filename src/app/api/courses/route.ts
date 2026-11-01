@@ -44,7 +44,7 @@ export async function POST(req: Request) {
       priceFull: body.priceFull ?? "",
       priceInstallments: body.priceInstallments ?? "",
       paymentNote: body.paymentNote ?? "",
-      image: body.image ?? "/images/curso/capa.png",
+      image: body.image ?? "/images/curso/capa.webp",
       imagePosition: body.imagePosition ?? "center",
       active: body.active ?? true,
     },

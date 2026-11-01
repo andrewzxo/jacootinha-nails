@@ -12,10 +12,10 @@ export function Gallery() {
     gallery.length > 0
       ? gallery.map((g, i) => ({ src: g.url, alt: g.caption || "Trabalho realizado", tall: i % 2 === 0, pos: g.imagePosition || "center" }))
       : [
-          { src: "/images/gallery1.png", alt: "Alongamento em gel com acabamento natural", tall: true, pos: "center" },
-          { src: "/images/gallery2.png", alt: "Esmaltação impecável em tom clássico", tall: false, pos: "center" },
-          { src: "/images/gallery3.png", alt: "Nail art sofisticada dourada", tall: true, pos: "center" },
-          { src: "/images/gallery4.png", alt: "Manutenção e blindagem da unha natural", tall: false, pos: "center" },
+          { src: "/images/gallery1.webp", alt: "Alongamento em gel com acabamento natural", tall: true, pos: "center" },
+          { src: "/images/gallery2.webp", alt: "Esmaltação impecável em tom clássico", tall: false, pos: "center" },
+          { src: "/images/gallery3.webp", alt: "Nail art sofisticada dourada", tall: true, pos: "center" },
+          { src: "/images/gallery4.webp", alt: "Manutenção e blindagem da unha natural", tall: false, pos: "center" },
         ];
 
   return (

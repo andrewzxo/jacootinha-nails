@@ -46,7 +46,7 @@ function CourseHeader({ onEnroll }: { onEnroll: () => void }) {
         <div className="flex items-center justify-between h-16 md:h-18">
           <a href="/?area=curso" className="flex items-center gap-2 group">
             <Image
-              src="/images/logo.png"
+              src="/images/logo.webp"
               alt="Jacootinha Nails"
               width={40}
               height={40}
@@ -133,7 +133,7 @@ function CourseFooter() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-10">
           <div>
             <a href="/?area=curso" className="flex items-center gap-2 mb-4">
-              <Image src="/images/logo.png" alt="Jacootinha Nails" width={36} height={36} className="rounded-full" />
+              <Image src="/images/logo.webp" alt="Jacootinha Nails" width={36} height={36} className="rounded-full" />
               <span className="font-display text-xl font-bold">
                 Jacootinha <span className="font-script text-2xl text-[var(--gold-light)]">Nails</span>
               </span>
@@ -274,7 +274,7 @@ export function CoursePage({ onEnroll }: { onEnroll: () => void }) {
                 <div className="absolute inset-0 translate-x-4 translate-y-4 rounded-[2rem] border border-[var(--gold)]/40" aria-hidden="true" />
                 <div className="relative rounded-[2rem] overflow-hidden shadow-2xl shadow-rose-200/60 border border-white/60 bg-white">
                   <Image
-                    src={course?.image || "/images/curso/capa.png"}
+                    src={course?.image || "/images/curso/capa.webp"}
                     alt="Capa do Curso Pro Nails — Molde F1"
                     width={1024}
                     height={1024}
@@ -303,7 +303,7 @@ export function CoursePage({ onEnroll }: { onEnroll: () => void }) {
             <Reveal>
               <div className="max-w-2xl mx-auto rounded-[1.75rem] overflow-hidden shadow-xl shadow-rose-100 border border-white/60">
                 <Image
-                  src="/images/curso/bemvinda.png"
+                  src="/images/curso/bemvinda.webp"
                   alt="Bem-vinda ao Curso Pro Nails"
                   width={1024}
                   height={1024}
@@ -329,7 +329,7 @@ export function CoursePage({ onEnroll }: { onEnroll: () => void }) {
             <Reveal>
               <div className="max-w-2xl mx-auto rounded-[1.75rem] overflow-hidden shadow-xl shadow-rose-100 border border-white/60">
                 <Image
-                  src="/images/curso/paravoce.png"
+                  src="/images/curso/paravoce.webp"
                   alt="É para você que deseja liberdade financeira e reconhecimento profissional"
                   width={1024}
                   height={1024}
@@ -348,7 +348,7 @@ export function CoursePage({ onEnroll }: { onEnroll: () => void }) {
             <Reveal>
               <div className="rounded-[1.75rem] overflow-hidden shadow-xl shadow-rose-100 border border-white/60">
                 <Image
-                  src="/images/curso/po.png"
+                  src="/images/curso/po.webp"
                   alt="Quanto mais pó fica na sua mesa, mais dinheiro você joga no lixo"
                   width={1024}
                   height={1024}
@@ -374,7 +374,7 @@ export function CoursePage({ onEnroll }: { onEnroll: () => void }) {
             <Reveal>
               <div className="max-w-2xl mx-auto rounded-[1.75rem] overflow-hidden shadow-xl shadow-rose-100 border border-white/60">
                 <Image
-                  src="/images/curso/incluso.png"
+                  src="/images/curso/incluso.webp"
                   alt="O que está incluso no curso"
                   width={1024}
                   height={1024}
@@ -406,7 +406,7 @@ export function CoursePage({ onEnroll }: { onEnroll: () => void }) {
               <Reveal>
                 <div className="rounded-[1.75rem] overflow-hidden shadow-xl shadow-rose-100 border border-white/60">
                   <Image
-                    src="/images/curso/investimento.png"
+                    src="/images/curso/investimento.webp"
                     alt="Investimento no Curso Pro Nails"
                     width={1024}
                     height={1024}
@@ -443,7 +443,7 @@ export function CoursePage({ onEnroll }: { onEnroll: () => void }) {
             <Reveal>
               <div className="rounded-[1.75rem] overflow-hidden shadow-xl shadow-rose-100 border border-white/60">
                 <Image
-                  src="/images/curso/instagram.png"
+                  src="/images/curso/instagram.webp"
                   alt="Instagram @jacootinhanails"
                   width={1024}
                   height={1024}

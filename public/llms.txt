@@ -1,0 +1,32 @@
+# Jacootinha Nails
+
+> Salão de nail design especializado em alongamentos sofisticados (molde F1, gel) e formação profissional de nail designers. Atendimento mediante agendamento online.
+
+## Visão geral do site
+
+O site é uma aplicação de página única (SPA) com uma área pública e uma área do curso separada:
+
+- `/` — página principal: apresentação, serviços (com preços e duração), cursos, galeria de trabalhos, depoimentos e contato via WhatsApp.
+- `/?area=curso` — página dedicada ao "Curso Pro Nails — Molde F1": conteúdo do curso, o que está incluso, para quem é, investimento (R$ 2.988 ou 12x R$ 249) e contato para matrícula.
+- Login (opcional) para clientes acompanharem agendamentos; área administrativa restrita.
+
+## Serviços oferecidos
+
+- Manicure Clássica — R$ 45 (60 min)
+- Pedicure Spa — R$ 65 (75 min)
+- Alongamento em Gel — R$ 180 (120 min)
+- Nail Art Personalizada — R$ 95 (90 min)
+- Esmaltação em Gel — R$ 70 (45 min)
+- Blindagem — R$ 60 (60 min)
+
+## Curso profissional
+
+Curso Pro Nails — Molde F1: R$ 2.988 ou 12x de R$ 249. Formação em alongamento com molde F1.
+
+## Como agendar
+
+Agendamento em 3 passos no site (escolha do serviço, data/hora e confirmação) com redirecionamento ao WhatsApp +55 19 99850-4614 para confirmação.
+
+## Horário de funcionamento
+
+Terça a sábado, das 09:00 às 18:00.

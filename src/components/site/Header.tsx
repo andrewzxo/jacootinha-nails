@@ -37,7 +37,7 @@ export function Header({ onBook }: { onBook: () => void }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 md:h-18">
           <a href="/" className="flex items-center gap-2 group">
-            <Image src="/images/logo.png" alt="Jacootinha Nails" width={40} height={40} className="rounded-full group-hover:scale-105 transition-transform" />
+            <Image src="/images/logo.webp" alt="Jacootinha Nails" width={40} height={40} className="rounded-full group-hover:scale-105 transition-transform" />
             <span className="font-display text-xl md:text-2xl font-bold text-[var(--charcoal)]">
               Jacootinha <span className="font-script text-2xl md:text-3xl text-[var(--rose-deep)]">Nails</span>
             </span>

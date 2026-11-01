@@ -24,7 +24,7 @@ export async function POST(req: Request) {
       description: body.description?.trim() ?? "",
       durationMin: Number(body.durationMin) || 60,
       price: body.price === null ? null : Number(body.price),
-      image: body.image ?? "/images/gallery1.png",
+      image: body.image ?? "/images/gallery1.webp",
       imagePosition: body.imagePosition ?? "center",
       active: body.active ?? true,
     },

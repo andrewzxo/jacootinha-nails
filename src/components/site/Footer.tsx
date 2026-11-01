@@ -16,7 +16,7 @@ export function Footer() {
           {/* Brand */}
           <div>
             <a href="/" className="flex items-center gap-2 mb-4">
-              <Image src="/images/logo.png" alt="Jacootinha Nails" width={36} height={36} className="rounded-full" />
+              <Image src="/images/logo.webp" alt="Jacootinha Nails" width={36} height={36} className="rounded-full" />
               <span className="font-display text-xl font-bold">
                 Jacootinha <span className="font-script text-2xl text-[var(--gold-light)]">Nails</span>
               </span>

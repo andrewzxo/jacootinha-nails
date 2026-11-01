@@ -133,7 +133,7 @@ export const MOCK_SERVICES: Service[] = [
     description: "Cutilagem delicada, lixamento e esmaltação impecável com acabamento profissional.",
     durationMin: 60,
     price: 45,
-    image: "/images/gallery1.png",
+    image: "/images/gallery1.webp",
     active: true,
   },
   {
@@ -142,7 +142,7 @@ export const MOCK_SERVICES: Service[] = [
     description: "Relaxante ritual com hidratação profunda, esfoliação e esmaltação perfeita.",
     durationMin: 75,
     price: 65,
-    image: "/images/gallery2.png",
+    image: "/images/gallery2.webp",
     active: true,
   },
   {
@@ -151,7 +151,7 @@ export const MOCK_SERVICES: Service[] = [
     description: "Unhas longas e naturais com gel de alta durabilidade, moldadas sob medida.",
     durationMin: 120,
     price: 180,
-    image: "/images/gallery3.png",
+    image: "/images/gallery3.webp",
     active: true,
   },
   {
@@ -160,7 +160,7 @@ export const MOCK_SERVICES: Service[] = [
     description: "Desenhos exclusivos e tendências do momento para unhas únicas como você.",
     durationMin: 90,
     price: 95,
-    image: "/images/gallery4.png",
+    image: "/images/gallery4.webp",
     active: true,
   },
   {
@@ -169,7 +169,7 @@ export const MOCK_SERVICES: Service[] = [
     description: "Cor intensa com brilho espelhado que dura até 21 dias sem lascar.",
     durationMin: 45,
     price: 70,
-    image: "/images/gallery2.png",
+    image: "/images/gallery2.webp",
     active: true,
   },
   {
@@ -178,7 +178,7 @@ export const MOCK_SERVICES: Service[] = [
     description: "Fortalecimento e proteção da unha natural com camada de blindagem em gel.",
     durationMin: 60,
     price: 60,
-    image: "/images/gallery1.png",
+    image: "/images/gallery1.webp",
     active: true,
   },
 ];
@@ -211,7 +211,7 @@ export const MOCK_COURSES: Course[] = [
       "Deseja ser vista como uma profissional expert que entrega excelência.",
       "Deseja viver mais tempo com a família.",
     ],
-    image: "/images/curso/capa.png",
+    image: "/images/curso/capa.webp",
     active: true,
   },
 ];

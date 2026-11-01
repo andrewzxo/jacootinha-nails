@@ -40,12 +40,12 @@ async function main() {
 
   // Services (6)
   const services = [
-    { name: "Manicure Clássica", description: "Cutilagem delicada, lixamento e esmaltação impecável com acabamento profissional.", durationMin: 60, price: 45, image: "/images/gallery1.png" },
-    { name: "Pedicure Spa", description: "Relaxante ritual com hidratação profunda, esfoliação e esmaltação perfeita.", durationMin: 75, price: 65, image: "/images/gallery2.png" },
-    { name: "Alongamento em Gel", description: "Unhas longas e naturais com gel de alta durabilidade, moldadas sob medida.", durationMin: 120, price: 180, image: "/images/gallery3.png" },
-    { name: "Nail Art Personalizada", description: "Desenhos exclusivos e tendências do momento para unhas únicas como você.", durationMin: 90, price: 95, image: "/images/gallery4.png" },
-    { name: "Esmaltação em Gel", description: "Cor intensa com brilho espelhado que dura até 21 dias sem lascar.", durationMin: 45, price: 70, image: "/images/gallery2.png" },
-    { name: "Blindagem", description: "Fortalecimento e proteção da unha natural com camada de blindagem em gel.", durationMin: 60, price: 60, image: "/images/gallery1.png" },
+    { name: "Manicure Clássica", description: "Cutilagem delicada, lixamento e esmaltação impecável com acabamento profissional.", durationMin: 60, price: 45, image: "/images/gallery1.webp" },
+    { name: "Pedicure Spa", description: "Relaxante ritual com hidratação profunda, esfoliação e esmaltação perfeita.", durationMin: 75, price: 65, image: "/images/gallery2.webp" },
+    { name: "Alongamento em Gel", description: "Unhas longas e naturais com gel de alta durabilidade, moldadas sob medida.", durationMin: 120, price: 180, image: "/images/gallery3.webp" },
+    { name: "Nail Art Personalizada", description: "Desenhos exclusivos e tendências do momento para unhas únicas como você.", durationMin: 90, price: 95, image: "/images/gallery4.webp" },
+    { name: "Esmaltação em Gel", description: "Cor intensa com brilho espelhado que dura até 21 dias sem lascar.", durationMin: 45, price: 70, image: "/images/gallery2.webp" },
+    { name: "Blindagem", description: "Fortalecimento e proteção da unha natural com camada de blindagem em gel.", durationMin: 60, price: 60, image: "/images/gallery1.webp" },
   ];
   for (const s of services) {
     const exists = await db.service.findFirst({ where: { name: s.name } });
@@ -96,7 +96,7 @@ async function main() {
       "Deseja ser vista como uma profissional expert que entrega excelência.",
       "Deseja viver mais tempo com a família.",
     ]),
-    image: "/images/curso/capa.png",
+    image: "/images/curso/capa.webp",
     active: true,
   };
   await db.course.updateMany({
@@ -146,10 +146,10 @@ async function main() {
 
   // Seed gallery images (idempotent by url)
   const gallerySeed = [
-    { url: "/images/gallery1.png", caption: "Alongamento em gel com acabamento natural", order: 1 },
-    { url: "/images/gallery2.png", caption: "Esmaltação impecável em tom clássico", order: 2 },
-    { url: "/images/gallery3.png", caption: "Nail art sofisticada dourada", order: 3 },
-    { url: "/images/gallery4.png", caption: "Manutenção e blindagem da unha natural", order: 4 },
+    { url: "/images/gallery1.webp", caption: "Alongamento em gel com acabamento natural", order: 1 },
+    { url: "/images/gallery2.webp", caption: "Esmaltação impecável em tom clássico", order: 2 },
+    { url: "/images/gallery3.webp", caption: "Nail art sofisticada dourada", order: 3 },
+    { url: "/images/gallery4.webp", caption: "Manutenção e blindagem da unha natural", order: 4 },
   ];
   for (const g of gallerySeed) {
     await db.galleryImage.upsert({ where: { url: g.url }, update: { caption: g.caption, order: g.order }, create: g });

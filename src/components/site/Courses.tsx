@@ -18,7 +18,7 @@ export function Courses() {
             <div className="grid sm:grid-cols-[180px_1fr] items-stretch">
               <div className="relative min-h-40 sm:min-h-full">
                 <Image
-                  src="/images/curso/capa.png"
+                  src="/images/curso/capa.webp"
                   alt="Curso Pro Nails — Molde F1"
                   fill
                   className="object-cover"

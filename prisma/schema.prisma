@@ -24,7 +24,7 @@ model Service {
   description String
   durationMin Int
   price       Float?
-  image       String    @default("/images/gallery1.png")
+  image       String    @default("/images/gallery1.webp")
   imagePosition String  @default("center")
   active      Boolean   @default(true)
   bookings    Booking[]
@@ -48,7 +48,7 @@ model Course {
   priceInstallments String @default("")
   paymentNote      String @default("")
   forWho           String @default("[]") // JSON-encoded string[]
-  image        String   @default("/images/course.png")
+  image        String   @default("/images/course.webp")
   imagePosition String  @default("center")
   active       Boolean  @default(true)
   createdAt   DateTime @default(now())
