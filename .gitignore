@@ -61,3 +61,4 @@ server.log
 /upload/
 /.zscripts/
 .initial_snapshot.json
+.neon
